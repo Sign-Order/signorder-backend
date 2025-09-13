@@ -28,15 +28,12 @@ jobs:
           sudo apt-get install -y protobuf-compiler
           go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
           go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-        working-directory: ./server
 
       - name: Generate Proto files
         run: make proto
-        working-directory: ./server
 
       - name: Install Go dependencies
         run: go mod download
-        working-directory: ./server
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -64,8 +61,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./server
-          file: ./server/Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/capstone-server:develop
           build-args: |
