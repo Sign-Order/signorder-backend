@@ -115,6 +115,7 @@ jobs:
               --env-file .env \
               -v /etc/letsencrypt:/etc/letsencrypt:ro \
               -v $(pwd)/.env:/app/.env:ro \
+              -v /etc/letsencrypt/live:/etc/letsencrypt/live:ro \
               ${{ secrets.DOCKERHUB_USERNAME }}/capstone-server:develop
 
 
