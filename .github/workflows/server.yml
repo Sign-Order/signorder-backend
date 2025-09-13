@@ -113,16 +113,11 @@ jobs:
               --restart unless-stopped \
               --network host \
               --env-file .env \
-              -v /etc/letsencrypt:/etc/letsencrypt:ro \
+              -v /home/ubuntu/letsencrypt:/etc/letsencrypt:ro \
               -v $(pwd)/.env:/app/.env:ro \
               ${{ secrets.DOCKERHUB_USERNAME }}/capstone-server:develop
 
-            # 인증서 파일을 컨테이너에 직접 복사
-            sudo snap run docker exec capstone-server mkdir -p /etc/letsencrypt/live/go.signorder.kr
-            sudo snap run docker cp /etc/letsencrypt/archive/go.signorder.kr/fullchain1.pem capstone-server:/etc/letsencrypt/live/go.signorder.kr/fullchain.pem
-            sudo snap run docker cp /etc/letsencrypt/archive/go.signorder.kr/privkey1.pem capstone-server:/etc/letsencrypt/live/go.signorder.kr/privkey.pem
-            sudo snap run docker exec capstone-server nginx -s reload
 
 
             # ✅ 인증서 갱신 자동화 (최초 1회만 등록해도 됨)
-            (crontab -l 2>/dev/null; echo "0 3 * * * /usr/bin/certbot renew --quiet && systemctl reload nginx") | crontab -
+            (crontab -l 2>/dev/null; echo "0 3 * * * /usr/bin/certbot renew --quiet && cp /etc/letsencrypt/live/go.signorder.kr/fullchain.pem /home/ubuntu/letsencrypt/live/go.signorder.kr/fullchain.pem && cp /etc/letsencrypt/live/go.signorder.kr/privkey.pem /home/ubuntu/letsencrypt/live/go.signorder.kr/privkey.pem && chown -R ubuntu:ubuntu /home/ubuntu/letsencrypt && chmod -R 750 /home/ubuntu/letsencrypt && /usr/bin/snap run docker exec capstone-server nginx -s reload") | crontab -
