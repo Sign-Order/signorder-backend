@@ -85,7 +85,10 @@ jobs:
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_SSH_KEY }}
           script: |
-            cd /home/ubuntu/capstone-2025-30/server
+            # 작업 디렉토리로 이동 (없으면 생성)
+            cd /home/ubuntu
+            mkdir -p signorder-backend
+            cd signorder-backend
 
             # .env 파일 생성
             echo "APP_ENV=${{ secrets.APP_ENV }}" > .env
