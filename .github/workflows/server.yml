@@ -2,10 +2,9 @@ name: Server CI/CD Pipeline
 
 on:
   push:
-    branches: ["develop"]
-    paths:
-      - 'server/**'
-      - 'proto/**'
+    branches: ["main"]
+
+      
 
 jobs:
   deploy:
