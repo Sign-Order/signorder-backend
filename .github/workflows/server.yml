@@ -104,10 +104,10 @@ jobs:
             echo "AI_TLS_CRT_SERVER="${{ secrets.AI_TLS_CRT_SERVER }}"" >> .env 
 
             # Docker 컨테이너 재시작
-            snap run docker pull ${{ secrets.DOCKERHUB_USERNAME }}/capstone-server:develop
-            snap run docker stop capstone-server || true
-            snap run docker rm capstone-server || true
-            snap run docker run -d \
+            sudo snap run docker pull ${{ secrets.DOCKERHUB_USERNAME }}/capstone-server:develop
+            sudo snap run docker stop capstone-server || true
+            sudo snap run docker rm capstone-server || true
+            sudo snap run docker run -d \
               --name capstone-server \
               --dns=8.8.8.8 \
               --restart unless-stopped \
