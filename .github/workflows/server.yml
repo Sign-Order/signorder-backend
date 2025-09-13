@@ -115,8 +115,13 @@ jobs:
               --env-file .env \
               -v /etc/letsencrypt:/etc/letsencrypt:ro \
               -v $(pwd)/.env:/app/.env:ro \
-              -v /etc/letsencrypt/live:/etc/letsencrypt/live:ro \
               ${{ secrets.DOCKERHUB_USERNAME }}/capstone-server:develop
+
+            # 인증서 파일을 컨테이너에 직접 복사
+            sudo snap run docker exec capstone-server mkdir -p /etc/letsencrypt/live/go.signorder.kr
+            sudo snap run docker cp /etc/letsencrypt/archive/go.signorder.kr/fullchain1.pem capstone-server:/etc/letsencrypt/live/go.signorder.kr/fullchain.pem
+            sudo snap run docker cp /etc/letsencrypt/archive/go.signorder.kr/privkey1.pem capstone-server:/etc/letsencrypt/live/go.signorder.kr/privkey.pem
+            sudo snap run docker exec capstone-server nginx -s reload
 
 
             # ✅ 인증서 갱신 자동화 (최초 1회만 등록해도 됨)
