@@ -56,7 +56,7 @@ jobs:
           echo "ALLOWED_AUTH_KEY=${{ secrets.ALLOWED_AUTH_KEY }}" >> .env
           echo "WEBSOCKET_API_KEY=${{ secrets.WEBSOCKET_API_KEY }}" >> .env
           echo "AI_GRPC_HOST=${{ secrets.AI_GRPC_HOST }}" >> .env
-          echo "AI_TLS_CRT_SERVER=${{ secrets.AI_TLS_CRT_SERVER }}" >> .env 
+          echo "AI_TLS_CRT_SERVER="${{ secrets.AI_TLS_CRT_SERVER }}"" >> .env
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -76,7 +76,7 @@ jobs:
             ALLOWED_AUTH_KEY=${{ secrets.ALLOWED_AUTH_KEY }}
             WEBSOCKET_API_KEY=${{ secrets.WEBSOCKET_API_KEY }}
             AI_GRPC_HOST=${{ secrets.AI_GRPC_HOST }}
-            AI_TLS_CRT_SERVER=${{ secrets.AI_TLS_CRT_SERVER }}
+            AI_TLS_CRT_SERVER="${{ secrets.AI_TLS_CRT_SERVER }}"
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -101,7 +101,7 @@ jobs:
             echo "ALLOWED_AUTH_KEY=${{ secrets.ALLOWED_AUTH_KEY }}" >> .env
             echo "WEBSOCKET_API_KEY=${{ secrets.WEBSOCKET_API_KEY }}" >> .env
             echo "AI_GRPC_HOST=${{ secrets.AI_GRPC_HOST }}" >> .env
-            echo "AI_TLS_CRT_SERVER=${{ secrets.AI_TLS_CRT_SERVER }}" >> .env 
+            echo "AI_TLS_CRT_SERVER="${{ secrets.AI_TLS_CRT_SERVER }}"" >> .env  
 
             # Docker 컨테이너 재시작
             sudo snap run docker pull ${{ secrets.DOCKERHUB_USERNAME }}/capstone-server:develop
