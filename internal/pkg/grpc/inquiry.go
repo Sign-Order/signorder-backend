@@ -108,6 +108,7 @@ loop:
 
 	// test info
 	logrus.Infof("total received: %d", totalReceived)
+	logrus.Infof("sequence: %v", sequence)
 
 	// 축적한 데이터 ai 로 전송
 	predictResp, err := utils.AiClient.PredictFromFrames(stream.Context(), &pb.FrameSequenceInput{
