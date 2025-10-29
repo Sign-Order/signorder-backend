@@ -166,10 +166,27 @@ loop:
 		}
 	}
 	if inquiryType == utils.StreamDataTypeInquiry {
-		inquiryNum, err = mmessage.CreateMMessageAndNotification(&mMessage, &mNotification, storeCode)
-		num = *inquiryNum
-		if err != nil {
-			panic(fmt.Errorf("failed to create message & notification: %v", err))
+		logrus.Infof("Received num value for inquiry: %d", num)
+
+		if num == -1 {
+			// 새 일반 문의 - 번호 발급
+			logrus.Info("Creating NEW inquiry (num is -1)")
+			inquiryNum, err = mmessage.CreateMMessageAndNotification(&mMessage, &mNotification, storeCode)
+			num = *inquiryNum
+			logrus.Infof("New inquiry number generated: %d", num)
+			if err != nil {
+				panic(fmt.Errorf("failed to create message & notification: %v", err))
+			}
+		} else if num > 0 {
+			// 추가 일반 문의 - 기존 번호 유지
+			logrus.Infof("Adding to EXISTING inquiry: %d", num)
+			mMessage.Number = num
+			err = mmessage.CreateMMessage(&mMessage)
+			if err != nil {
+				panic(fmt.Errorf("failed to create message: %v", err))
+			}
+		} else {
+			panic(fmt.Errorf("invalid num value for inquiry: %d (expected -1 for new inquiry or positive number for existing inquiry)", num))
 		}
 	}
 
