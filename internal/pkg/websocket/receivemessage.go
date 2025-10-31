@@ -6,7 +6,6 @@ import (
 	"time"
 
 	pb "server/gen"
-	mfastinquiry "server/internal/pkg/database/mongodb/fastinquiry"
 	mmessage "server/internal/pkg/database/mongodb/message"
 	mstore "server/internal/pkg/database/mongodb/store"
 	dbstructure "server/internal/pkg/database/structure"
@@ -127,16 +126,12 @@ func ReceiveKoreanMessage(msg *WebSocketReceiveMessage) error {
 			return err
 		}
 
-		fastInquiryData, err := mfastinquiry.GetFastInquiry(msg.Message)
-		if err != nil {
-			logrus.Errorf("Failed to get fast inquiry: %v", err)
-			return err
-		}
-
 		message := WebSocketMessage{
 			Type: "signMessage",
-			Data: SignUrlData{
-				SignUrls: fastInquiryData.URLs,
+			Data: MessageData{
+				Num:       int32(msg.Number),
+				Message:   msg.Message,
+				CreatedAt: currentTime,
 			},
 		}
 
